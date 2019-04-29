@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration debug="false" scan="true">
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+
+    <springProfile name="prod">
+        <appender name="rolling"
+                  class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <File>logs/sysone-letters-compression.log</File>
+            <append>true</append>
+            <encoder>
+                <pattern>
+                    <![CDATA[%date %5level [%X{tid}-%X{uow}-%X{requestId}] [%thread] %logger - %message%n]]></pattern>
+            </encoder>
+            <rollingPolicy
+                    class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+                <maxIndex>5</maxIndex>
+                <FileNamePattern>logs/sysone-letters-compression.log.%i</FileNamePattern>
+            </rollingPolicy>
+            <triggeringPolicy
+                    class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+                <MaxFileSize>100MB</MaxFileSize>
+            </triggeringPolicy>
+        </appender>
+
+        <logger name="org.sysone" additivity="true" level="INFO"/>
+
+        <logger name="org.springframework.web.filter.CommonsRequestLoggingFilter">
+            <level value="DEBUG" />
+        </logger>
+
+        <root level="INFO">
+            <appender-ref ref="rolling"/>
+        </root>
+    </springProfile>
+
+    <springProfile name="dev">
+        <!-- Base -->
+        <logger name="org.sysone" additivity="true" level="INFO"/>
+
+        <logger name="org.springframework.web.filter.CommonsRequestLoggingFilter">
+            <level value="DEBUG" />
+        </logger>
+
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+        </root>
+    </springProfile>
+</configuration>
+
